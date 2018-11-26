@@ -1,1 +1,1 @@
-# vega-lite
+# Vega-Lite for Looker
