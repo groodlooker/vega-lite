@@ -165,6 +165,7 @@ looker.plugins.visualizations.add({
         tooltipFields.push(tip);
       }
 
+      //switch to compatible mark if trying to utilize shape
       if (config['shape'] != "") {
         config['mark_type'] = "point";
       }
@@ -193,8 +194,7 @@ looker.plugins.visualizations.add({
         },
         "mark": {
           "type": config['mark_type'], 
-          "tooltip": {"content": "data", "format": ".2f"}, 
-          "fillOpacity": config['opacity'],
+          // "fillOpacity": config['opacity'],
           "stroke": config['border']
           // "strokeWidth": 1
         },
@@ -202,9 +202,6 @@ looker.plugins.visualizations.add({
         "height": chartHeight,
         //add an actual tooltip encoding with array of properties per field//
         "encoding": {
-          // "y": {"field": config['y'], "type": dataProperties[config['y']]['dtype'], "title": dataProperties[config['y']]['title']},
-          // "x": {"field": config['x'], "type": dataProperties[config['x']]['dtype'], "title": dataProperties[config['x']]['title']},
-          //temp tooltip, will need this style for every included field. Probably add a select in config for which fields to include
           "tooltip" : tooltipFields //{"$#,##0":"$,.0f"} {"#,##0.0%":".1%"}      
         }
       };
@@ -253,7 +250,11 @@ looker.plugins.visualizations.add({
           }
         }
       } else {
+        if (config['mark_type'] == "line") {
+          chart.mark.stroke = config['fixed_color'];
+        } else {
           chart.mark.fill = config['fixed_color'];
+        }
       }
 
       var sizableMarks = ["point", "square", "circle", "tick", "bar", "text"];
@@ -507,7 +508,8 @@ function createOptions(queryResponse){
       {"Line" : "line"},
       {"Rect" : "rect"},
       {"Area" : "area"},
-      {"Point" : "point"}
+      {"Point" : "point"},
+      {"Trail" : "trail"}
     ]
   }
 
