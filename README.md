@@ -21,8 +21,8 @@ All charts you create will maintain their drill paths with additional info about
 
 A few examples of what you can create with Vega-Lite for Looker:
 
-Basic trellising:
-![Screenshot](basic_trellis.png)
+Bar trellising:
+![Screenshot](bar_trellis.png)
 
 Multi-facet trellising:
 ![Screenshot](trellis_region_segment.png)
