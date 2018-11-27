@@ -1,5 +1,3 @@
-var loadCounter = 0;
-
 looker.plugins.visualizations.add({
     create: function(element, config){
 
@@ -8,8 +6,7 @@ looker.plugins.visualizations.add({
 
     },
     updateAsync: function(data, element, config, queryResponse, details, doneRendering){
-      loadCounter += 1;
-      console.log("Page has loaded: " + String(loadCounter) + " times");
+
       var myData = [];
       var dataProperties = {};
       var dims = [];
@@ -18,16 +15,9 @@ looker.plugins.visualizations.add({
 
       var options = createOptions(queryResponse)['options'];  
 
-      this.trigger('registerOptions', options);
-
-      console.log("Config has " + String(Object.keys(config).length) + " options recorded");
-
-      console.log(queryResponse);      
+      this.trigger('registerOptions', options);  
 
       if (Object.keys(config).length > 2) {
-
-        console.log("Config requirements met, building chart");
-        console.log(config);
 
       if (config['domain'] != "") {
         var colorDomain = [];
@@ -292,12 +282,10 @@ looker.plugins.visualizations.add({
       }
 
 
-      console.log(chart);
+      // console.log(chart);
 
       vegaEmbed("#my-table", chart, {actions: false}).then(({spec, view}) => {
         view.addEventListener('click', function (event, item) {
-          console.log(item);
-          console.log(item.datum);
           LookerCharts.Utils.openDrillMenu({
             links: item.datum.links,
             event: event
