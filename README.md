@@ -36,3 +36,5 @@ Heatmap:
 Scatter Plots:
 ![Screenshot](scatter_plot_tooltip.png)
 ![Screenshot](scatter_plot_drill.png)
+
+Vega-Lite enables even richer visualization than this current version of "Vega-Lite for Looker" will allow for. Future iterations of this will include layers or "dual axis" support, cross-highlighting capabilities, more formatting options (line thickness, fonts, etc) and possibly crossfiltering.
