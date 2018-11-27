@@ -1,3 +1,4 @@
+var loadCounter = 0;
 
 looker.plugins.visualizations.add({
     create: function(element, config){
@@ -7,22 +8,24 @@ looker.plugins.visualizations.add({
 
     },
     updateAsync: function(data, element, config, queryResponse, details, doneRendering){
+      loadCounter += 1;
+      console.log("Page has loaded: " + String(loadCounter) + " times");
       var myData = [];
       var dataProperties = {};
       var dims = [];
       var meas = [];
       var allFields = [];
 
-      console.log(queryResponse);
-
       var options = createOptions(queryResponse)['options'];  
 
-      this.trigger('registerOptions', options);      
+      this.trigger('registerOptions', options);
+
+      console.log("Config has " + String(Object.keys(config).length) + " options recorded");      
 
       if (Object.keys(config).length > 2) {
 
-
-      
+        console.log("Config requirements met, building chart");
+        console.log(config);
 
       if (config['domain'] != "") {
         var colorDomain = [];
@@ -30,9 +33,6 @@ looker.plugins.visualizations.add({
           colorDomain.push(Number(config['domain'].split(",")[num]));
         }       
       }
-
-
-      console.log(colorDomain);
 
       var chartWidth = document.getElementById("my-table").offsetWidth * 0.81;
       var chartHeight = document.getElementById("my-table").offsetHeight;
@@ -64,8 +64,6 @@ looker.plugins.visualizations.add({
         dataDict['links'] = dataDict['links'].flat();
         myData.push(dataDict);
       }
-
-      console.log(myData);
 
       var rowValues = [];
       var colValues = [];
@@ -151,8 +149,6 @@ looker.plugins.visualizations.add({
         });
       }
 
-      console.log(dataProperties);
-
       //construct the tooltip with appropriate formatting
       var tooltipFields = [];
 
@@ -221,18 +217,18 @@ looker.plugins.visualizations.add({
       if (config['column'] != "") {
         //add column facet
         chart.encoding.column = {"field":config['column'],"type":dataProperties[config['column']]['dtype'],"title": dataProperties[config['column']]['title']};
-        //check for independent axes
-        if (config['independent_y'] != "" && config['y'] != "") {
+        // check for independent axes
+        if (config['resolve_y'] != "" && config['y'] != "") {
           chart.resolve = {"scale": {"y":"independent"}};
         }
-        if (config['independent_x'] != "" && config['x'] != "") {
+        if (config['resolve_x'] != "" && config['x'] != "") {
           chart.resolve = {"scale": {"x":"independent"}};
         }
       }      
       if (config['row'] != "") {
         //add row facet
         chart.encoding.row = {"field":config['row'],"type":dataProperties[config['row']]['dtype'],"title": dataProperties[config['row']]['title']};
-        //check for independent axes
+        // check for independent axes
         if (config['resolve_y'] != "" && config['y'] != "") {
           chart.resolve = {"scale": {"y":"independent"}};
         }
@@ -291,17 +287,18 @@ looker.plugins.visualizations.add({
 
       vegaEmbed("#my-table", chart, {actions: false}).then(({spec, view}) => {
         view.addEventListener('click', function (event, item) {
+          console.log(item);
+          console.log(item.datum);
           LookerCharts.Utils.openDrillMenu({
             links: item.datum.links,
             event: event
           });
         });
+          doneRendering();
       });
 
 }
       
-  doneRendering();
-
     }
 });
 
@@ -427,7 +424,7 @@ function createOptions(queryResponse){
       {"Brown Green (Diverging)" : "brownbluegreen"}
     ],
     default: ""
-  },
+  }
   optionsResponse['options']['domain'] = {
     label: "Color Domain",
     section: "2) Mark",
@@ -458,26 +455,26 @@ function createOptions(queryResponse){
     label: "Independent X Axis",
     section: "1) Axes",
     type: "string",
-    display: "radio",
+    display: "select",
     default: "",
     order: 5,
     values: [
     {"Yes":"independent"},
     {"No":""}
     ]
-  },
+  }
   optionsResponse['options']['resolve_y'] = {
     label: "Independent Y Axis",
     section: "1) Axes",
     type: "string",
-    display: "radio",
+    display: "select",
     order: 6,
     default: "",
     values: [
     {"Yes":"independent"},
     {"No":""}
     ]
-  },
+  }
   optionsResponse['options']['fixed_size'] = {
     label: "Fixed Size",
     section: "4) Format",
