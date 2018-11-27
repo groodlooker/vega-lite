@@ -1,5 +1,3 @@
-var loadCounter = 0;
-
 looker.plugins.visualizations.add({
     create: function(element, config){
 
@@ -8,8 +6,7 @@ looker.plugins.visualizations.add({
 
     },
     updateAsync: function(data, element, config, queryResponse, details, doneRendering){
-      loadCounter += 1;
-      console.log("Page has loaded: " + String(loadCounter) + " times");
+
       var myData = [];
       var dataProperties = {};
       var dims = [];
@@ -18,14 +15,9 @@ looker.plugins.visualizations.add({
 
       var options = createOptions(queryResponse)['options'];  
 
-      this.trigger('registerOptions', options);
-
-      console.log("Config has " + String(Object.keys(config).length) + " options recorded");      
+      this.trigger('registerOptions', options);  
 
       if (Object.keys(config).length > 2) {
-
-        console.log("Config requirements met, building chart");
-        console.log(config);
 
       if (config['domain'] != "") {
         var colorDomain = [];
@@ -161,6 +153,7 @@ looker.plugins.visualizations.add({
         tooltipFields.push(tip);
       }
 
+
       //switch to compatible mark if trying to utilize shape
       if (config['shape'] != "") {
         config['mark_type'] = "point";
@@ -183,7 +176,7 @@ looker.plugins.visualizations.add({
             "bar": {"size":null},
             "text": {"size":null},
             "tick": {"size":null},
-            "point": {"size":null},
+            "point": {"size":2},
             "square": {"size":null}            
           }
         },
@@ -193,7 +186,6 @@ looker.plugins.visualizations.add({
           "stroke": config['border']
           // "strokeWidth": 1
         },
-        // "resolve": {"scale":{"y":"independent"}},
         "width": chartWidth,
         "height": chartHeight,
         "encoding": {
@@ -204,6 +196,13 @@ looker.plugins.visualizations.add({
 
       //checks for building viz based on config selections//
      //////////////////////////////////////////////////////
+
+     //add points to line to ensure proper drill through
+     var marksNeedingPoints = ["line","trail","area"];
+     // "mark": {"type": "line", "color": "green", "point": {"color": "red"}},
+     if (marksNeedingPoints.includes(config['mark_type'])) {
+      chart.mark.point = {"color":config['fixed_color']};
+     }
 
      if (config['y'] != "") {
       chart.encoding.y = {"field": config['y'], "type": dataProperties[config['y']]['dtype'], "title": dataProperties[config['y']]['title']};
@@ -283,12 +282,10 @@ looker.plugins.visualizations.add({
       }
 
 
-      console.log(chart);
+      // console.log(chart);
 
       vegaEmbed("#my-table", chart, {actions: false}).then(({spec, view}) => {
         view.addEventListener('click', function (event, item) {
-          console.log(item);
-          console.log(item.datum);
           LookerCharts.Utils.openDrillMenu({
             links: item.datum.links,
             event: event
@@ -477,7 +474,7 @@ function createOptions(queryResponse){
   }
   optionsResponse['options']['fixed_size'] = {
     label: "Fixed Size",
-    section: "4) Format",
+    section: "3) Format",
     type: "number",
     display: "range",
     default: 100,
@@ -486,7 +483,7 @@ function createOptions(queryResponse){
   }
   optionsResponse['options']['opacity'] = {
     label: "Opacity",
-    section: "4) Format",
+    section: "3) Format",
     type: "number",
     display: "text",
     default: 1,
@@ -496,28 +493,28 @@ function createOptions(queryResponse){
   }
   optionsResponse['options']['fixed_height'] = {
     label: "Chart Height",
-    section: "4) Format",
+    section: "3) Format",
     type: "number",
     display: "text",
     default: null,
   }
   optionsResponse['options']['fixed_width'] = {
     label: "Chart Width",
-    section: "4) Format",
+    section: "3) Format",
     type: "number",
     display: "text",
     default: null,
   }
   optionsResponse['options']['fixed_color'] = {
     label: "Color",
-    section: "4) Format",
+    section: "3) Format",
     type: "string",
     display: "text",
     default: "#4C78A8"
   }
   optionsResponse['options']['border'] = {
     label: "Border (Enter color)",
-    section: "4) Format",
+    section: "3) Format",
     type: "string",
     display: "text",
     default: ""
