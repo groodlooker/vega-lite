@@ -190,19 +190,18 @@ looker.plugins.visualizations.add({
             "point": {"size":null},
             "square": {"size":null}            
           }
-
         },
         "mark": {
           "type": config['mark_type'], 
-          // "fillOpacity": config['opacity'],
+          "fillOpacity": config['opacity'],
           "stroke": config['border']
           // "strokeWidth": 1
         },
+        // "resolve": {"scale":{"y":"independent"}},
         "width": chartWidth,
         "height": chartHeight,
-        //add an actual tooltip encoding with array of properties per field//
         "encoding": {
-          "tooltip" : tooltipFields //{"$#,##0":"$,.0f"} {"#,##0.0%":".1%"}      
+          "tooltip" : tooltipFields      
         }
       };
 
@@ -222,15 +221,31 @@ looker.plugins.visualizations.add({
       if (config['column'] != "") {
         //add column facet
         chart.encoding.column = {"field":config['column'],"type":dataProperties[config['column']]['dtype'],"title": dataProperties[config['column']]['title']};
+        //check for independent axes
+        if (config['independent_y'] != "" && config['y'] != "") {
+          chart.resolve = {"scale": {"y":"independent"}};
+        }
+        if (config['independent_x'] != "" && config['x'] != "") {
+          chart.resolve = {"scale": {"x":"independent"}};
+        }
       }      
       if (config['row'] != "") {
         //add row facet
         chart.encoding.row = {"field":config['row'],"type":dataProperties[config['row']]['dtype'],"title": dataProperties[config['row']]['title']};
+        //check for independent axes
+        if (config['resolve_y'] != "" && config['y'] != "") {
+          chart.resolve = {"scale": {"y":"independent"}};
+        }
+        if (config['resolve_x'] != "" && config['x'] != "") {
+          chart.resolve = {"scale": {"x":"independent"}};
+        }        
       }
 
-
-      var myColorPalettes = ["tableau10","tableau20","dark2","category20b","set2"];
       //coloring properties
+
+      //check when someone trying to use categorical scheme with sequential data
+      var myColorPalettes = ["tableau10","tableau20","dark2","category20b","set2"];
+      
       if (config['color'] != ""){
         //add color setting based on data type
         chart.encoding.color = {"field": config['color'], "type": dataProperties[config['color']]['dtype'],"title": dataProperties[config['color']]['title']};
@@ -350,6 +365,7 @@ function createOptions(queryResponse){
     section: "1) Axes",
     type: "string",
     display: "select",
+    order: 1,
     values: optionsResponse['masterList'],
     default: defaultDim
   }
@@ -358,6 +374,7 @@ function createOptions(queryResponse){
     section: "1) Axes",
     type: "string",
     display: "select",
+    order: 2,
     values: optionsResponse['masterList'],
     default: defaultMes
   }
@@ -421,20 +438,46 @@ function createOptions(queryResponse){
   }
   optionsResponse['options']['row'] = {
     label: "Row",
-    section: "3) Facet",
+    section: "1) Axes",
     type: "string",
+    order: 3,
     display: "select",
     default: "",
     values: optionsResponse['dimensions']
   }
   optionsResponse['options']['column'] = {
     label: "Column",
-    section: "3) Facet",
+    section: "1) Axes",
     type: "string",
+    order: 4,
     display: "select",
     default: "",
     values: optionsResponse['dimensions']
   }
+  optionsResponse['options']['resolve_x'] = {
+    label: "Independent X Axis",
+    section: "1) Axes",
+    type: "string",
+    display: "radio",
+    default: "",
+    order: 5,
+    values: [
+    {"Yes":"independent"},
+    {"No":""}
+    ]
+  },
+  optionsResponse['options']['resolve_y'] = {
+    label: "Independent Y Axis",
+    section: "1) Axes",
+    type: "string",
+    display: "radio",
+    order: 6,
+    default: "",
+    values: [
+    {"Yes":"independent"},
+    {"No":""}
+    ]
+  },
   optionsResponse['options']['fixed_size'] = {
     label: "Fixed Size",
     section: "4) Format",
