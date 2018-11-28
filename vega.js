@@ -254,18 +254,9 @@ looker.plugins.visualizations.add({
         if (config['highlight'] != "" && typeof config['highlight'] != "undefined") {
           chart.selection = {"paintbrush":{
             "type" : "multi",
-            "on" : "mouseover", "empty":"all","fields":[config['color']]
+            "on" : "mouseover", "empty":"all","fields":[config['highlight']]
           }};
         }
-
-      //give precedence to color highlighting
-              //   "color": {
-        //     "condition": {
-        //       "selection": "paintbrush",
-        //       "field": config['color'], "type": dataProperties[config['color']]['dtype']
-        //     },
-        //     "value": "grey"    
-        // }
 
       //change color domain based on user input
       if (config['domain'] != "" && typeof config['domain'] != "undefined") {
@@ -291,8 +282,7 @@ looker.plugins.visualizations.add({
           "field":config['highlight'], "type": dataProperties[config['highlight']]['dtype'], "title": dataProperties[config['highlight']]['title']
           },
         //value if false 
-        "value":"grey"
-        
+        "value":"#B8B8B8"
         };
       } else if (config['color'] != "" && typeof config['color'] != undefined) {
         //if user has changed the field to color by
