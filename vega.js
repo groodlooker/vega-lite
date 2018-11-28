@@ -1,6 +1,3 @@
-//unpin axis from zero
-//fix undefined on domain, shouldn't be happening??
-
 looker.plugins.visualizations.add({
     create: function(element, config){
 
@@ -200,7 +197,7 @@ looker.plugins.visualizations.add({
       chart.mark.point = {"color":config['fixed_color']};
      }
 
-     if (config['y'] != "") {
+     if (config['y'] != "" && typeof config['x'] != "undefined") {
       chart.encoding.y = {
         "field": config['y'], 
         "type": dataProperties[config['y']]['dtype'], 
@@ -208,7 +205,7 @@ looker.plugins.visualizations.add({
         "scale": {"zero": config['unpin_y']}};
      }
 
-     if (config['x'] != "") {
+     if (config['x'] != "" && typeof config['x'] != "undefined") {
       chart.encoding.x = {
         "field": config['x'], 
         "type": dataProperties[config['x']]['dtype'], 
@@ -289,6 +286,8 @@ looker.plugins.visualizations.add({
       if (config['line_style'] != "" && typeof config['line_style'] != "undefined" && config['mark_type'] == "line") {
         chart.mark.interpolate = config['line_style'];
       }
+
+      // chart.order = {"field": config['path'],"type": "temporal"};
 
       //sizing properties
       if (config['size'] != "") {
@@ -560,7 +559,6 @@ function createOptions(queryResponse){
     type: "string",
     display: "text",
     default: ""
-
   }
   optionsResponse['options']['shape'] = {
     label: "Shape",
@@ -570,6 +568,15 @@ function createOptions(queryResponse){
     display: "select",
     values: optionsResponse['dimensions'],
     default: ""
+  }
+  optionsResponse['options']['path'] = {
+    label: "Path",
+    section: "2) Mark",
+    order: 7,
+    type: "string",
+    default: "",
+    display: "select",
+    values: optionsResponse['dimensions']
   }
   optionsResponse['options']['mark_type'] = {
     label: "Mark Type",
@@ -583,7 +590,7 @@ function createOptions(queryResponse){
       {"Rule" : "rule"},
       {"Circle" : "circle"},
       {"Tick" : "tick"},
-      {"Text" : "text"},
+      // {"Text" : "text"},
       {"Line" : "line"},
       {"Rect" : "rect"},
       {"Area" : "area"},
