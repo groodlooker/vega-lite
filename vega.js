@@ -1,8 +1,11 @@
+//unpin axis from zero
+//fix undefined on domain, shouldn't be happening??
+
 looker.plugins.visualizations.add({
     create: function(element, config){
 
         container = element.appendChild(document.createElement("div"));
-        container.setAttribute("id","my-table");
+        container.setAttribute("id","my-vega");
 
     },
     updateAsync: function(data, element, config, queryResponse, details, doneRendering){
@@ -19,16 +22,9 @@ looker.plugins.visualizations.add({
 
       if (Object.keys(config).length > 2) {
 
-      if (config['domain'] != "") {
-        var colorDomain = [];
-        for (num in config['domain'].split(",")) {
-          colorDomain.push(Number(config['domain'].split(",")[num]));
-        }       
-      }
-
-      var chartWidth = document.getElementById("my-table").offsetWidth * 0.81;
-      var chartHeight = document.getElementById("my-table").offsetHeight;
-      var parent = document.getElementById("my-table").parentElement;
+      var chartWidth = document.getElementById("my-vega").offsetWidth * 0.81;
+      var chartHeight = document.getElementById("my-vega").offsetHeight;
+      var parent = document.getElementById("my-vega").parentElement;
       var chartHeight = parent.offsetHeight * 0.78;
 
       for (var cell in data) {
@@ -205,11 +201,19 @@ looker.plugins.visualizations.add({
      }
 
      if (config['y'] != "") {
-      chart.encoding.y = {"field": config['y'], "type": dataProperties[config['y']]['dtype'], "title": dataProperties[config['y']]['title']};
+      chart.encoding.y = {
+        "field": config['y'], 
+        "type": dataProperties[config['y']]['dtype'], 
+        "title": dataProperties[config['y']]['title'], 
+        "scale": {"zero": config['unpin_y']}};
      }
 
      if (config['x'] != "") {
-      chart.encoding.x = {"field": config['x'], "type": dataProperties[config['x']]['dtype'], "title": dataProperties[config['x']]['title']};
+      chart.encoding.x = {
+        "field": config['x'], 
+        "type": dataProperties[config['x']]['dtype'], 
+        "title": dataProperties[config['x']]['title'],
+        "scale": {"zero": config['unpin_x']}};
      }
 
       //row & column facets
@@ -266,12 +270,24 @@ looker.plugins.visualizations.add({
           chart.mark.fill = config['fixed_color'];
         }
       }
+      //change color domain based on user input
+      if (config['domain'] != "" && typeof config['domain'] != "undefined") {
+        var colorDomain = [];
+        for (num in config['domain'].split(",")) {
+          colorDomain.push(Number(config['domain'].split(",")[num]));
+        }       
+      }
 
       var sizableMarks = ["point", "square", "circle", "tick", "bar", "text"];
 
       //shape properties
       if (config['shape'] != "") {
         chart.encoding.shape = {"field": config['shape'], "type": dataProperties[config['shape']]['dtype'],"title": dataProperties[config['shape']]['title']};
+      }
+
+      //set style of line
+      if (config['line_style'] != "" && typeof config['line_style'] != "undefined" && config['mark_type'] == "line") {
+        chart.mark.interpolate = config['line_style'];
       }
 
       //sizing properties
@@ -282,9 +298,9 @@ looker.plugins.visualizations.add({
       }
 
 
-      // console.log(chart);
+      console.log(chart);
 
-      vegaEmbed("#my-table", chart, {actions: false}).then(({spec, view}) => {
+      vegaEmbed("#my-vega", chart, {actions: false}).then(({spec, view}) => {
         view.addEventListener('click', function (event, item) {
           LookerCharts.Utils.openDrillMenu({
             links: item.datum.links,
@@ -465,12 +481,30 @@ function createOptions(queryResponse){
     section: "1) Axes",
     type: "string",
     display: "select",
-    order: 6,
+    order: 7,
     default: "",
     values: [
     {"Yes":"independent"},
     {"No":""}
     ]
+  }
+  optionsResponse['options']['unpin_x'] = {
+    label: "Unpin X from Zero",
+    section: "1) Axes",
+    type: "string",
+    display: "select",
+    order: 6,
+    default: true,
+    values: [{"Yes":false},{"No":true}]
+  }
+  optionsResponse['options']['unpin_y'] = {
+    label: "Unpin Y from Zero",
+    section: "1) Axes",
+    type: "string",
+    display: "select",
+    order: 8,
+    default: true,
+    values: [{"Yes":false},{"No":true}]   
   }
   optionsResponse['options']['fixed_size'] = {
     label: "Fixed Size",
@@ -490,6 +524,14 @@ function createOptions(queryResponse){
     step: 1,
     min: 0,
     max: 1
+  }
+  optionsResponse['options']['line_style'] = {
+    label: "Line Style",
+    section: "3) Format",
+    type: "string",
+    display: "select",
+    default: "",
+    values:[{"Default":""},{"Monotone":"monotone"},{"Step":"step-after"}]
   }
   optionsResponse['options']['fixed_height'] = {
     label: "Chart Height",
