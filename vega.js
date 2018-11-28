@@ -275,7 +275,7 @@ looker.plugins.visualizations.add({
         }
         chart.encoding.color = {
         "condition": {
-          "scale": {"type":"nominal","scheme":config['color_scheme']},
+          "scale": {"type":"ordinal","scheme":config['color_scheme']},
           //use aformentioned select
           "selection" : "paintbrush",
           //field to drive the highlight
