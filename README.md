@@ -2,6 +2,8 @@
 Vega is an incredible way to create visualizations, stated in their own words:
 # Vega is a visualization grammar, a declarative language for creating, saving, and sharing interactive visualization designs. With Vega, you can describe the visual appearance and interactive behavior of a visualization in a JSON format, and generate web-based views using Canvas or SVG.
 
+**New as of 11/30/18 Highlighting Dimensions (scroll to bottom for example)**
+
 This Looker version adds a number of ui elements to craft visualizations in Vega-Lite, a higher-level language built on top of Vega:
 
 https://vega.github.io/vega-lite/
@@ -36,5 +38,8 @@ Heatmap:
 Scatter Plots:
 ![Screenshot](scatter_plot_tooltip.png)
 ![Screenshot](scatter_plot_drill.png)
+
+Highlighting:
+![Screenshot](highlight.png)
 
 Vega-Lite enables even richer visualization than this current version of "Vega-Lite for Looker" will allow for. Future iterations of this will include layers or "dual axis" support, cross-highlighting capabilities, more formatting options (line thickness, fonts, etc) and possibly crossfiltering.
