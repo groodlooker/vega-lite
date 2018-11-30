@@ -222,7 +222,7 @@ looker.plugins.visualizations.add({
      }
 
       //row & column facets
-      if (config['column'] != "") {
+      if (config['column'] != "" && typeof config['column'] != "undefined") {
         //add column facet
         chart.encoding.column = {"field":config['column'],"type":dataProperties[config['column']]['dtype'],"title": dataProperties[config['column']]['title']};
         // check for independent axes
@@ -233,7 +233,7 @@ looker.plugins.visualizations.add({
           chart.resolve = {"scale": {"x":"independent"}};
         }
       }      
-      if (config['row'] != "") {
+      if (config['row'] != "" && typeof config['column'] != "undefined") {
         //add row facet
         chart.encoding.row = {"field":config['row'],"type":dataProperties[config['row']]['dtype'],"title": dataProperties[config['row']]['title']};
         // check for independent axes
@@ -284,7 +284,7 @@ looker.plugins.visualizations.add({
         //value if false 
         "value":"#B8B8B8"
         };
-      } else if (config['color'] != "" && typeof config['color'] != undefined) {
+      } else if (config['color'] != "" && typeof config['color'] != "undefined") {
         //if user has changed the field to color by
         //add color setting based on data type
         chart.encoding.color = {"field": config['color'], "type": dataProperties[config['color']]['dtype'],"title": dataProperties[config['color']]['title']};
@@ -342,15 +342,34 @@ looker.plugins.visualizations.add({
         chart.config.mark.size = config['fixed_size'];
       }
 
+      //order properties for stacked bars
+      if (config['order'] != "" && typeof config['order'] != "undefined") {
+        chart.encoding.order = {"field":config['order'], "type":dataProperties[config['order']]['dtype'], "sort":config['order_type']};
+      }
+
+      //sorting properties for bar charts mainly
+      if (config['sort'] != "" && typeof config['sort'] != "undefined") {
+        if (dataProperties[config['y']]['dtype'] == "nominal") {
+          chart.encoding.y.sort = {"field":config['sort'],"op":"sum" ,"order":config['sort_type']}; //"type":dataProperties[config['sort']]['dtype'],
+        } else if (dataProperties[config['x']]['dtype'] == "nominal") {
+          chart.encoding.x.sort = {"field":config['sort'],"op":"sum","order":config['sort_type']}; //"type":dataProperties[config['sort']]['dtype'],
+        }
+      }
+
 
       console.log(chart);
 
       vegaEmbed("#my-vega", chart, {actions: false}).then(({spec, view}) => {
         view.addEventListener('click', function (event, item) {
-          LookerCharts.Utils.openDrillMenu({
-            links: item.datum.links,
-            event: event
-          });
+          if (event.shiftKey) {
+
+          } else {
+             LookerCharts.Utils.openDrillMenu({
+              links: item.datum.links,
+              event: event
+          });           
+          }
+
         });
           doneRendering();
       });
@@ -648,13 +667,47 @@ function createOptions(queryResponse){
     label: "Highlight Action",
     section: "4) Advanced",
     type: "string",
+    order: 1,
     display: "select",
     default: "",
     values: optionsResponse['dimensions']
   }
+  optionsResponse['options']['order'] = {
+    label: "Order by (stacked only)",
+    section: "4) Advanced",
+    type: "string",
+    order: 4,
+    display: "select",
+    default: "",
+    values: optionsResponse['measures']
+  }
+  optionsResponse['options']['order_type'] = {
+    label: "Order by Type",
+    section: "4) Advanced",
+    type: "string",
+    order: 5,
+    display: "select",
+    default: "descending",
+    values: [{"Descending":"descending"},{"Ascending":"ascending"}]
+  }
+  optionsResponse['options']['sort'] = {
+    label: "Sort Value",
+    order: 2,
+    section: "4) Advanced",
+    type: "string",
+    display: "select",
+    default: "",
+    values: optionsResponse['measures']
+  }
+  optionsResponse['options']['sort_type'] = {
+    label: "Sort by Type",
+    order: 3,
+    section: "4) Advanced",
+    type: "string",
+    display: "select",
+    default: "descending",
+    values: [{"Descending":"descending"},{"Ascending":"ascending"}]
+  }
 
   return optionsResponse;
 }
-
-
-
