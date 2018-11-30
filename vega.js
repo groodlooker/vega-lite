@@ -161,6 +161,12 @@ looker.plugins.visualizations.add({
         //   "type": "fit",
         //   "contains": "padding"
         // },
+        // "selection": {
+        //   "paintbrush": {
+        //     "type": "single",
+        //     "on": "mouseover", "empty": "all", "fields":[config['color']]
+        //   }
+        // },
         "config": {
           "mark": {
             "size": null,
@@ -182,9 +188,11 @@ looker.plugins.visualizations.add({
         "width": chartWidth,
         "height": chartHeight,
         "encoding": {
-          "tooltip" : tooltipFields      
-        }
+          "tooltip" : tooltipFields
+       }
       };
+
+
 
 
       //checks for building viz based on config selections//
@@ -214,7 +222,7 @@ looker.plugins.visualizations.add({
      }
 
       //row & column facets
-      if (config['column'] != "") {
+      if (config['column'] != "" && typeof config['column'] != "undefined") {
         //add column facet
         chart.encoding.column = {"field":config['column'],"type":dataProperties[config['column']]['dtype'],"title": dataProperties[config['column']]['title']};
         // check for independent axes
@@ -225,7 +233,7 @@ looker.plugins.visualizations.add({
           chart.resolve = {"scale": {"x":"independent"}};
         }
       }      
-      if (config['row'] != "") {
+      if (config['row'] != "" && typeof config['column'] != "undefined") {
         //add row facet
         chart.encoding.row = {"field":config['row'],"type":dataProperties[config['row']]['dtype'],"title": dataProperties[config['row']]['title']};
         // check for independent axes
@@ -237,43 +245,81 @@ looker.plugins.visualizations.add({
         }        
       }
 
-      //coloring properties
+      //coloring properties//
 
-      //check when someone trying to use categorical scheme with sequential data
+      //list of categorical schemes not compatible with sequential data
       var myColorPalettes = ["tableau10","tableau20","dark2","category20b","set2"];
-      
-      if (config['color'] != ""){
+
+      //add selection handler to chart
+        if (config['highlight'] != "" && typeof config['highlight'] != "undefined") {
+          chart.selection = {"paintbrush":{
+            "type" : "multi",
+            "on" : "mouseover", "empty":"all","fields":[config['highlight']]
+          }};
+        }
+
+      //change color domain based on user input
+      if (config['domain'] != "" && typeof config['domain'] != "undefined") {
+        var colorDomain = [];
+        //parse the string input by user into array of integers
+        for (num in config['domain'].split(",")) {
+          colorDomain.push(Number(config['domain'].split(",")[num]));
+        }       
+      }
+
+      //set highlighting based on selection, use color selected on marks page
+      if (config['highlight'] != "" && typeof config['highlight'] != "undefined") {
+        //assign default color if none selected
+        if (config['color_scheme'] == "") {
+          config['color_scheme'] = "tableau10"
+        }
+        chart.encoding.color = {
+        "condition": {
+          "scale": {"type":"ordinal","scheme":config['color_scheme']},
+          //use aformentioned select
+          "selection" : "paintbrush",
+          //field to drive the highlight
+          "field":config['highlight'], "type": dataProperties[config['highlight']]['dtype'], "title": dataProperties[config['highlight']]['title']
+          },
+        //value if false 
+        "value":"#B8B8B8"
+        };
+      } else if (config['color'] != "" && typeof config['color'] != "undefined") {
+        //if user has changed the field to color by
         //add color setting based on data type
         chart.encoding.color = {"field": config['color'], "type": dataProperties[config['color']]['dtype'],"title": dataProperties[config['color']]['title']};
+        //check if quantitative or nominal
         if (dataProperties[config['color']]['dtype'] == 'quantitative') {
           //determine scale and scheme based on data type
           if (config['color_scheme'] == "") {
+            //if color scheme left on auto, assign the blues
             chart.encoding.color.scale = {"type": "sequential", "scheme":"blues"};
           } else {
+            //if color scheme is categorical, but used with quantitative data, switch it to the blues by default
             if (myColorPalettes.includes(config['color_scheme'])) {config['color_scheme'] = "blues";}
-            chart.encoding.color.scale = {"type": "sequential", "scheme": {"name" : config['color_scheme']}, "domain" : colorDomain}; //"domain" : [-1,0,1]
+            //apply new color scheme for sequential data, include domain manually provided
+            chart.encoding.color.scale = {"type": "sequential", "scheme": {"name" : config['color_scheme']}, "domain" : colorDomain};
           }
         } else if (dataProperties[config['color']]['dtype'] == 'nominal') {
           if (config['color_scheme'] == "") {
+            //if color scheme is auto, use tableau10
             chart.encoding.color.scale = {"type": "ordinal", "scheme":"tableau10"};
           } else {
+            //assign selected color scheme otherwise - ordinal will work with quantitative data so no checking required
             chart.encoding.color.scale = {"type": "ordinal", "scheme":config['color_scheme']};
           }
         }
       } else {
         if (config['mark_type'] == "line") {
+          //color the stoke if it's a line to avoid it being filled
           chart.mark.stroke = config['fixed_color'];
         } else {
+          //color the fill of the mark if not a line
           chart.mark.fill = config['fixed_color'];
         }
       }
-      //change color domain based on user input
-      if (config['domain'] != "" && typeof config['domain'] != "undefined") {
-        var colorDomain = [];
-        for (num in config['domain'].split(",")) {
-          colorDomain.push(Number(config['domain'].split(",")[num]));
-        }       
-      }
+
+      //End coloring section//
 
       var sizableMarks = ["point", "square", "circle", "tick", "bar", "text"];
 
@@ -296,15 +342,34 @@ looker.plugins.visualizations.add({
         chart.config.mark.size = config['fixed_size'];
       }
 
+      //order properties for stacked bars
+      if (config['order'] != "" && typeof config['order'] != "undefined") {
+        chart.encoding.order = {"field":config['order'], "type":dataProperties[config['order']]['dtype'], "sort":config['order_type']};
+      }
+
+      //sorting properties for bar charts mainly
+      if (config['sort'] != "" && typeof config['sort'] != "undefined") {
+        if (dataProperties[config['y']]['dtype'] == "nominal") {
+          chart.encoding.y.sort = {"field":config['sort'],"op":"sum" ,"order":config['sort_type']}; //"type":dataProperties[config['sort']]['dtype'],
+        } else if (dataProperties[config['x']]['dtype'] == "nominal") {
+          chart.encoding.x.sort = {"field":config['sort'],"op":"sum","order":config['sort_type']}; //"type":dataProperties[config['sort']]['dtype'],
+        }
+      }
+
 
       console.log(chart);
 
       vegaEmbed("#my-vega", chart, {actions: false}).then(({spec, view}) => {
         view.addEventListener('click', function (event, item) {
-          LookerCharts.Utils.openDrillMenu({
-            links: item.datum.links,
-            event: event
-          });
+          if (event.shiftKey) {
+
+          } else {
+             LookerCharts.Utils.openDrillMenu({
+              links: item.datum.links,
+              event: event
+          });           
+          }
+
         });
           doneRendering();
       });
@@ -511,7 +576,7 @@ function createOptions(queryResponse){
     type: "number",
     display: "range",
     default: 100,
-    min: 20,
+    min: 1,
     max: 5000
   }
   optionsResponse['options']['opacity'] = {
@@ -598,9 +663,51 @@ function createOptions(queryResponse){
       {"Trail" : "trail"}
     ]
   }
+  optionsResponse['options']['highlight'] = {
+    label: "Highlight Action",
+    section: "4) Advanced",
+    type: "string",
+    order: 1,
+    display: "select",
+    default: "",
+    values: optionsResponse['dimensions']
+  }
+  optionsResponse['options']['order'] = {
+    label: "Order by (stacked only)",
+    section: "4) Advanced",
+    type: "string",
+    order: 4,
+    display: "select",
+    default: "",
+    values: optionsResponse['measures']
+  }
+  optionsResponse['options']['order_type'] = {
+    label: "Order by Type",
+    section: "4) Advanced",
+    type: "string",
+    order: 5,
+    display: "select",
+    default: "descending",
+    values: [{"Descending":"descending"},{"Ascending":"ascending"}]
+  }
+  optionsResponse['options']['sort'] = {
+    label: "Sort Value",
+    order: 2,
+    section: "4) Advanced",
+    type: "string",
+    display: "select",
+    default: "",
+    values: optionsResponse['measures']
+  }
+  optionsResponse['options']['sort_type'] = {
+    label: "Sort by Type",
+    order: 3,
+    section: "4) Advanced",
+    type: "string",
+    display: "select",
+    default: "descending",
+    values: [{"Descending":"descending"},{"Ascending":"ascending"}]
+  }
 
   return optionsResponse;
 }
-
-
-
