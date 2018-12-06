@@ -4,6 +4,8 @@ Vega is an incredible way to create visualizations, stated in their own words:
 
 **New as of 11/30/18 Highlighting Dimensions (scroll to bottom for example)**
 
+**New as of 12/6/18 Porting more complex Vega visuals to Looker https://github.com/groodlooker/vega**
+
 This Looker version adds a number of ui elements to craft visualizations in Vega-Lite, a higher-level language built on top of Vega:
 
 https://vega.github.io/vega-lite/
