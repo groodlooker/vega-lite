@@ -4,7 +4,7 @@ Vega is an incredible way to create visualizations, stated in their own words:
 
 **New as of 12/6/18 Porting more complex Vega visuals to Looker https://github.com/groodlooker/vega**
 
-**New as of 12/11/18 Support for Two Layers & Reference Lines in 'vega-beta.js'**
+**New as of 12/14/18 Support for Two Layers & Reference Lines in vega-2.js'**
 
 This Looker version adds a number of ui elements to craft visualizations in Vega-Lite, a higher-level language built on top of Vega:
 
@@ -13,6 +13,9 @@ https://vega.github.io/vega-lite/
 The main js file is available hosted here:
 
 https://s3.us-east-2.amazonaws.com/grood-lookin/vega.js
+
+Vega-lite 2 available hosted here (due to UI limitations with API will keep this separate as it adds complexity to UI):
+https://s3.us-east-2.amazonaws.com/grood-lookin/vega-2.js
 
 Dependencies that need to be added to your Looker Custom Viz are hosted here:
 https://cdn.jsdelivr.net/npm/vega@4.3.0/build/vega.js
@@ -25,7 +28,7 @@ All charts you create will maintain their drill paths with additional info about
 
 A few examples of what you can create with Vega-Lite for Looker:
 
-**New as of 12/11/18 multi-layer support (in vega-beta.js file as still working through some quirks)**
+**New as of 12/14/18 multi-layer support in vega-2.js file**
 
 Value vs Target charting:
 ![Screenshot](value_v_target.png)
