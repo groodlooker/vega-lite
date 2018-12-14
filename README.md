@@ -4,7 +4,7 @@ Vega is an incredible way to create visualizations, stated in their own words:
 
 **New as of 12/6/18 Porting more complex Vega visuals to Looker https://github.com/groodlooker/vega**
 
-**New as of 12/14/18 Support for Two Layers & Reference Lines in vega-2.js'**
+**New as of 12/14/18 Support for Two Layers & Reference Lines in vega-2.js**
 
 This Looker version adds a number of ui elements to craft visualizations in Vega-Lite, a higher-level language built on top of Vega:
 
