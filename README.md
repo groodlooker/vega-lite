@@ -2,9 +2,11 @@
 Vega is an incredible way to create visualizations, stated in their own words:
 # Vega is a visualization grammar, a declarative language for creating, saving, and sharing interactive visualization designs. With Vega, you can describe the visual appearance and interactive behavior of a visualization in a JSON format, and generate web-based views using Canvas or SVG.
 
-**New as of 12/6/18 Porting more complex Vega visuals to Looker https://github.com/groodlooker/vega**
+More complex Vega visuals in Looker: https://github.com/groodlooker/vega
 
 **New as of 12/14/18 Support for Two Layers & Reference Lines in vega-2.js**
+
+**New as of 12/22/18 Added Support for mark type 'boxplot'**
 
 This Looker version adds a number of ui elements to craft visualizations in Vega-Lite, a higher-level language built on top of Vega:
 
@@ -27,6 +29,11 @@ https://cdn.jsdelivr.net/npm/vega-embed@3.20.0/build/vega-embed.js
 All charts you create will maintain their drill paths with additional info about which field is generating the drill link.
 
 A few examples of what you can create with Vega-Lite for Looker:
+
+**New as of 12/22/18 box plot support**
+
+![Screenshot](standard_box.png)
+![Screenshot](colored_boxes.png)
 
 **New as of 12/14/18 multi-layer support in vega-2.js file**
 
