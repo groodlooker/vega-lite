@@ -7,6 +7,11 @@ looker.plugins.visualizations.add({
         container = element.appendChild(document.createElement("div"));
         container.setAttribute("id","my-vega");
 
+        var css = document.createElement("style");
+        css.type = "text/css";
+        css.innerHTML = "#vg-tooltip-element { font-family: Open Sans,Helvetica,Arial,sans-serif}";
+        element.appendChild(css);
+
     },
     updateAsync: function(data, element, config, queryResponse, details, doneRendering){
 
@@ -134,6 +139,9 @@ looker.plugins.visualizations.add({
         },
         "facet" : {},
         "config": {
+          "axis": {"titleFont":"Open Sans,Helvetica,Arial,sans-serif","labelFont":"Open Sans,Helvetica,Arial,sans-serif"},
+          "header": {"titleFont":"Open Sans,Helvetica,Arial,sans-serif","labelFont":"Open Sans,Helvetica,Arial,sans-serif"},
+          "legend": {"titleFont":"Open Sans,Helvetica,Arial,sans-serif","labelFont":"Open Sans,Helvetica,Arial,sans-serif"}
           // "circle": {"opacity":config['opacity']},
           // "bar": {"opacity":config['opacity']}
         },
@@ -142,7 +150,7 @@ looker.plugins.visualizations.add({
             "mark": {
               "type": config['mark_type'], 
               "fillOpacity": config['opacity'],
-              "stroke": config['border']
+              "stroke": config['border'][0]
             },
             "encoding": {}
           }
@@ -178,7 +186,7 @@ looker.plugins.visualizations.add({
           "type": config['mark_type2'],
           "fillOpacity":config['opacity2'],
           "thickness":3,
-          "stroke":config['border2']
+          "stroke":config['border2'][0]
           }
         };
 
@@ -194,7 +202,7 @@ looker.plugins.visualizations.add({
           "type": config['mark_type2'],
           "fillOpacity":config['opacity2'],
           "thickness":3,
-          "stroke":config['border2']
+          "stroke":config['border2'][0]
         }
       };
 
@@ -693,9 +701,43 @@ looker.plugins.visualizations.add({
       };
     }
 
+    if (config['mark_type'] == 'boxplot') {
+      if (config['color'] == "" || typeof config['color'] == "undefined") {
+        chart.spec.layer[0].encoding.color = {"value":config['fixed_color'][0]};
+      } else {
+        chart.spec.layer[0].encoding.color = {"field":config['color'],"type":dataProperties[config['color']]['dtype'],"title":dataProperties[config['color']]['title']};
+        chart.spec.layer[0].encoding.color.scale = {"type": "ordinal", "scheme":config['color_scheme']};
+      }
+      
+      // chart.spec.layer[0].encoding.opacity = {"value":config['opacity']};
+
+      if (config['boxplotExtent'] == "1.5") {
+        config['boxplotExtent'] = Number(config['boxplotExtent']);
+      }
+      chart.config.boxplot = {
+        "extent": config['boxplotExtent'],
+        "median": {"color":config['boxMedian'][0],"thickness":2,"ticks":true}
+      }
+      chart.config.bar = {
+        "stroke": config['border'][0],
+        "fill": config['fixed_color'][0],
+        "fillOpacity": config['opacity']
+      }
+    }
+
       console.log(chart);
 
-      vegaEmbed("#my-vega", chart, {actions: false}).then(({spec, view}) => {
+      var tooltipOptions = {
+        theme: 'dark'
+      };
+
+      var opt = {
+        "actions": false,
+        "tooltip": tooltipOptions
+      };
+
+      vegaEmbed("#my-vega", chart, opt).then(({spec, view}) => {
+        var tips = document.getElementsByClassName("vg-tooltip");
         view.addEventListener('click', function (event, item) {
           if (event.shiftKey) {
             //opportunity to do something different with a shift click, filter maybe??
@@ -865,7 +907,7 @@ function createOptions(queryResponse){
       {"Rule" : "rule"},
       {"Circle" : "circle"},
       {"Tick" : "tick"},
-      // {"Text" : "text"},
+      {"Box Plot" : "boxplot"},
       {"Line" : "line"},
       {"Rect" : "rect"},
       {"Area" : "area"},
@@ -976,8 +1018,8 @@ function createOptions(queryResponse){
   optionsResponse['options']['border'] = {
     label: "Border (Enter color)",
     section: "2.Mark",
-    type: "string",
-    display: "text",
+    type: "array",
+    display: "color",
     default: ""
   }
   //end mark config options layer 1
@@ -995,7 +1037,7 @@ function createOptions(queryResponse){
       {"Rule" : "rule"},
       {"Circle" : "circle"},
       {"Tick" : "tick"},
-      // {"Text" : "text"},
+      {"Box Plot" : "boxplot"},
       {"Line" : "line"},
       {"Rect" : "rect"},
       {"Area" : "area"},
@@ -1106,8 +1148,8 @@ function createOptions(queryResponse){
   optionsResponse['options']['border2'] = {
     label: "Border (Enter color)",
     section: "3.Mark(2)",
-    type: "string",
-    display: "text",
+    type: "array",
+    display: "color",
     default: ""
   }
   //end mark config layer 2
@@ -1177,6 +1219,7 @@ function createOptions(queryResponse){
     label: "Chart Height",
     section: "4.Settings",
     type: "number",
+    order: 1,
     display: "text",
     default: null,
   }
@@ -1184,6 +1227,7 @@ function createOptions(queryResponse){
     label: "Chart Width",
     section: "4.Settings",
     type: "number",
+    order: 2,
     display: "text",
     default: null,
   }
@@ -1200,6 +1244,7 @@ function createOptions(queryResponse){
     label: "Highlight Action",
     section: "4.Settings",
     type: "string",
+    order: 3,
     display: "select",
     default: "",
     values: optionsResponse['dimensions']
@@ -1270,15 +1315,32 @@ function createOptions(queryResponse){
     default: "",
     values: [{"No":""},{"Mean":"mean"},{"Median":"median"},{"Min":"min"},{"Max":"max"}]
   }
-optionsResponse['options']['labels'] = {
-  label: "Labels?",
+optionsResponse['options']['boxplotExtent'] = {
+  label: "Box Plot Extent",
   section: "4.Settings",
   type: "string",
   display: "select",
   default: "",
-  values: optionsResponse['masterList']
-  // values: [{"Yes":"yes"},{"No":"no"}]
+  order:19,
+  values: [{"1.5 IQR":"1.5"},{"Min-Max":"min-max"}]
 }
+optionsResponse['options']['boxMedian'] = {
+  label: "Box Plot Median",
+  section: "4.Settings",
+  type: "array",
+  display: "color",
+  default: "black",
+  order:20
+}
+// optionsResponse['options']['labels'] = {
+//   label: "Labels?",
+//   section: "4.Settings",
+//   type: "string",
+//   display: "select",
+//   default: "",
+//   values: optionsResponse['masterList']
+//   // values: [{"Yes":"yes"},{"No":"no"}]
+// }
 
   return optionsResponse;
 }
