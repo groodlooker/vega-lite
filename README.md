@@ -4,20 +4,24 @@ Vega is an incredible way to create visualizations, stated in their own words:
 
 More complex Vega visuals in Looker: https://github.com/groodlooker/vega
 
-**New as of 12/14/18 Support for Two Layers & Reference Lines in vega-2.js**
-
 **New as of 12/22/18 Added Support for mark type 'boxplot'**
+
+**New as of 1/14/18 Support for Labels vega-3.js**
 
 This Looker version adds a number of ui elements to craft visualizations in Vega-Lite, a higher-level language built on top of Vega:
 
 https://vega.github.io/vega-lite/
 
-The main js file is available hosted here:
+Versions:
 
+Vega-lite for Looker 1.0
 https://s3.us-east-2.amazonaws.com/grood-lookin/vega.js
 
-Vega-lite 2 available hosted here (due to UI limitations with API will keep this separate as it adds complexity to UI):
+Vega-lite for Looker 2.0:
 https://s3.us-east-2.amazonaws.com/grood-lookin/vega-2.js
+
+Vega-lite for Looker 3.0
+https://s3.us-east-2.amazonaws.com/grood-lookin/vega-3.js
 
 Dependencies that need to be added to your Looker Custom Viz are hosted here:
 https://cdn.jsdelivr.net/npm/vega@4.3.0/build/vega.js
@@ -30,12 +34,17 @@ All charts you create will maintain their drill paths with additional info about
 
 A few examples of what you can create with Vega-Lite for Looker:
 
+**Labels available in 3.0**
+![Screenshot](screen-shots/labels_stacked.png)
+![Screenshot](screen-shots/label_pinned_zero.png)
+![Screenshot](screen-shots/label_filters.png)
+
 **New as of 12/22/18 box plot support**
 
 ![Screenshot](screen-shots/standard_box.png)
 ![Screenshot](screen-shots/colored_boxes.png)
 
-**New as of 12/14/18 multi-layer support in vega-2.js file**
+**Multi-layer support availabe in 2.0**
 
 Value vs Target charting:
 ![Screenshot](screen-shots/value_v_target.png)
