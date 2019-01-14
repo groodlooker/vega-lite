@@ -32,8 +32,8 @@ A few examples of what you can create with Vega-Lite for Looker:
 
 **New as of 12/22/18 box plot support**
 
-![Screenshot](standard_box.png)
-![Screenshot](colored_boxes.png)
+![Screenshot](screen-shots/standard_box.png)
+![Screenshot](screen-shots/colored_boxes.png)
 
 **New as of 12/14/18 multi-layer support in vega-2.js file**
 
@@ -44,27 +44,27 @@ Lollipop style charts:
 ![Screenshot](screen-shots/lollipop.png)
 
 Reference Lines that update on selection:
-![Screenshot](movable_ref_line.png)
+![Screenshot](screen-shots/movable_ref_line.png)
 
 **Functionality in original vega-lite**
 
 Bar trellising:
-![Screenshot](bar_trellis.png)
+![Screenshot](screen-shots/bar_trellis.png)
 
 Multi-facet trellising:
-![Screenshot](trellis_region_segment.png)
+![Screenshot](screen-shots/trellis_region_segment.png)
 
 Bubble Plots:
-![Screenshot](bubble_plot.png)
+![Screenshot](screen-shots/bubble_plot.png)
 
 Heatmap:
-![Screenshot](heatmap.png)
+![Screenshot](screen-shots/heatmap.png)
 
 Scatter Plots:
-![Screenshot](scatter_plot_tooltip.png)
-![Screenshot](scatter_plot_drill.png)
+![Screenshot](screen-shots/scatter_plot_tooltip.png)
+![Screenshot](screen-shots/scatter_plot_drill.png)
 
 Highlighting:
-![Screenshot](highlight.png)
+![Screenshot](screen-shots/highlight.png)
 
 Vega-Lite enables even richer visualization than this current version of "Vega-Lite for Looker" will allow for. Future iterations of this will include layers or "dual axis" support, cross-highlighting capabilities, more formatting options (line thickness, fonts, etc) and possibly crossfiltering.
