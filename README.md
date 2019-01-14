@@ -38,10 +38,10 @@ A few examples of what you can create with Vega-Lite for Looker:
 **New as of 12/14/18 multi-layer support in vega-2.js file**
 
 Value vs Target charting:
-![Screenshot](value_v_target.png)
+![Screenshot](screen-shots/value_v_target.png)
 
 Lollipop style charts:
-![Screenshot](lollipop.png)
+![Screenshot](screen-shots/lollipop.png)
 
 Reference Lines that update on selection:
 ![Screenshot](movable_ref_line.png)
