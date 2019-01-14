@@ -36,7 +36,9 @@ A few examples of what you can create with Vega-Lite for Looker:
 
 **Labels available in 3.0**
 ![Screenshot](screen-shots/labels_stacked.png)
+Label can be pinned to the field value or to zero:
 ![Screenshot](screen-shots/label_pinned_zero.png)
+Apply filters/conditions to labels:
 ![Screenshot](screen-shots/label_filters.png)
 
 **New as of 12/22/18 box plot support**
