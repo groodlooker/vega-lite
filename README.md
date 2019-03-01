@@ -14,6 +14,9 @@ https://vega.github.io/vega-lite/
 
 Versions:
 
+Beta with sort & label fixes:
+https://s3.us-east-2.amazonaws.com/grood-lookin/vega-3-1.js
+
 Vega-lite for Looker 1.0
 https://s3.us-east-2.amazonaws.com/grood-lookin/vega.js
 
@@ -24,11 +27,11 @@ Vega-lite for Looker 3.0
 https://s3.us-east-2.amazonaws.com/grood-lookin/vega-3.js
 
 Dependencies that need to be added to your Looker Custom Viz are hosted here:
-https://cdn.jsdelivr.net/npm/vega@4.3.0/build/vega.js
+https://cdn.jsdelivr.net/npm/vega@5.0.0-rc2
 
-https://cdn.jsdelivr.net/npm/vega-lite@3.0.0-rc8/build/vega-lite.js
+https://cdn.jsdelivr.net/npm/vega-lite@3.0.0-rc13
 
-https://cdn.jsdelivr.net/npm/vega-embed@3.20.0/build/vega-embed.js
+https://cdn.jsdelivr.net/npm/vega-embed@3.29.1
 
 All charts you create will maintain their drill paths with additional info about which field is generating the drill link.
 
