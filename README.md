@@ -27,6 +27,7 @@ Vega-lite for Looker 3.0
 https://s3.us-east-2.amazonaws.com/grood-lookin/vega-3.js
 
 Dependencies that need to be added to your Looker Custom Viz are hosted here:
+
 https://cdn.jsdelivr.net/npm/vega@5.0.0-rc2
 
 https://cdn.jsdelivr.net/npm/vega-lite@3.0.0-rc13
