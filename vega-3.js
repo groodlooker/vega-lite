@@ -1,5 +1,17 @@
 // const vegaEmbed = require("/Users/ryangrojean/Documents/packed_visuals/vega-looker/node_modules/vega-embed/build/vega-embed.js");
 
+/**
+ * Fixes the chart sizing so that it doesn't overflow outside
+ * of lookers 'vis' container.
+ * @returns void
+ */
+const fixChartSizing = () => {
+    const container = document.getElementById('vis');
+    container.style.overflow = 'hidden';
+    const svg = container.querySelector('svg');
+    svg.setAttribute('height', container.clientHeight);
+    svg.setAttribute('width', container.clientWidth);
+};
 
 looker.plugins.visualizations.add({
     create: function(element, config){
@@ -28,19 +40,19 @@ looker.plugins.visualizations.add({
 
       var optionsMasterList = createOptionsResponse['masterList'];
 
-      this.trigger('registerOptions', options);  
+      this.trigger('registerOptions', options);
 
       const thisViz = this;
 
       //create array of all measures for lookup purposes
       queryResponse.fields.measure_like.forEach(function(field){
         var fieldName = (field.name).replace(".","_");
-        meas.push(fieldName);      
+        meas.push(fieldName);
       });
       //create array of all dimensions for lookup purposes
       queryResponse.fields.dimension_like.forEach(function(field){
         var fieldName = (field.name).replace(".","_");
-        dims.push(fieldName);      
+        dims.push(fieldName);
       });
 
       allFields = meas.concat(dims);
@@ -114,8 +126,8 @@ looker.plugins.visualizations.add({
         for (var x = 0; x < myData.length; x++) {
           rowValues.push(myData[x][config['row']]);
         }
-        let uniqueRows = new Set(rowValues); 
-        chartHeight = Math.max( (chartHeight / uniqueRows.size), (chartHeight / 12) );       
+        let uniqueRows = new Set(rowValues);
+        chartHeight = Math.max( (chartHeight / uniqueRows.size), (chartHeight / 12) );
       }
 
       //auto-sizing settings when a column facet included
@@ -123,8 +135,8 @@ looker.plugins.visualizations.add({
         for (var x = 0; x < myData.length; x++) {
           colValues.push(myData[x][config['column']]);
         }
-        let uniqueCols = new Set(colValues); 
-        chartWidth = Math.max( (chartWidth / uniqueCols.size), (chartWidth / 12) ) ;       
+        let uniqueCols = new Set(colValues);
+        chartWidth = Math.max( (chartWidth / uniqueCols.size), (chartWidth / 12) ) ;
       }
 
       //manual-sizing for chart height
@@ -135,7 +147,7 @@ looker.plugins.visualizations.add({
       //manual-sizing for chart width
       if (typeof config['fixed_width'] != "undefined" && config['fixed_width'] != null) {
         chartWidth = config['fixed_width'];
-      }      
+      }
 
       //construct the tooltip with appropriate formatting
       var tooltipFields = [];
@@ -145,7 +157,7 @@ looker.plugins.visualizations.add({
 
         if (config['includeInTip'] != "") {
           fieldsToExclude = config['includeInTip'].split(",").map(function(item){ return item.trim()});
-        } 
+        }
 
         if (!fieldsToExclude.includes(dataProperties[datum]['title'])) {
           var tip = {};
@@ -191,7 +203,7 @@ looker.plugins.visualizations.add({
         "spec": {
           "layer": [ {
             "mark": {
-              "type": config['mark_type'], 
+              "type": config['mark_type'],
               "fillOpacity": config['opacity'],
               "stroke": config['border'][0]
             },
@@ -199,10 +211,11 @@ looker.plugins.visualizations.add({
           }
           ],
           "width": chartWidth,
-          "height": chartHeight         
+          "height": chartHeight
         }
       };
-
+      // Fix sizing on next tick
+      setTimeout( () => fixChartSizing(), 0);
 
 
       ////////////////////////////////////////////
@@ -232,7 +245,7 @@ looker.plugins.visualizations.add({
           "stroke":config['border2'][0]
           }
         };
-      
+
       // secondLayer = {
       //   "encoding": {},
       //   "mark": {
@@ -273,9 +286,9 @@ looker.plugins.visualizations.add({
      //  // secondLayer.encoding.y = {};
      //  //re-aggregate the measure if requested, useful for an average line
 
-     //  } 
+     //  }
 
-      //End additional layer section//     
+      //End additional layer section//
      ////////////////////////////////
 
       //add column or row facet
@@ -290,7 +303,7 @@ looker.plugins.visualizations.add({
         if (config['resolve_x'] != "" && config['x'] != "") {
           chart.resolve = {"scale": {"x":"independent"}};
         }
-      }      
+      }
       if (config['row'] != "" && typeof config['row'] != "undefined") {
         //add row facet
         chart.facet.row = {"field":config['row'],"type":dataProperties[config['row']]['dtype'],"title": dataProperties[config['row']]['title']};
@@ -300,7 +313,7 @@ looker.plugins.visualizations.add({
         }
         if (config['resolve_x'] != "" && config['x'] != "") {
           chart.resolve = {"scale": {"x":"independent"}};
-        }        
+        }
       }
 
       //////////////////////////////////////////
@@ -316,7 +329,7 @@ looker.plugins.visualizations.add({
         }
 
     var layerCount = (chart.spec.layer).length;
-    
+
       //adjust opacity if circle
       if (config['mark_type'] == "circle" || config['mark_type'] == "point") {
         chart.spec.layer[0].mark.opacity = config['opacity'];
@@ -349,9 +362,9 @@ looker.plugins.visualizations.add({
      // set x and y axis
      if (config['y'] != "" && typeof config['y'] != "undefined") {
       chart.spec.layer[0].encoding.y = {
-        "field": config['y'], 
-        "type": dataProperties[config['y']]['dtype'], 
-        "title": dataProperties[config['y']]['title'], 
+        "field": config['y'],
+        "type": dataProperties[config['y']]['dtype'],
+        "title": dataProperties[config['y']]['title'],
         "scale": {"zero": config['unpin_y']}
       };
      }
@@ -362,7 +375,7 @@ looker.plugins.visualizations.add({
           secondLayer.encoding.y = {
             "field": config['y'],
             "type": dataProperties[config['y']]['dtype'],
-            "scale": {"zero": config['unpin_y']}      
+            "scale": {"zero": config['unpin_y']}
           };
           secondLayer.encoding.x = {
             "field":config['x2'],
@@ -375,7 +388,7 @@ looker.plugins.visualizations.add({
           secondLayer.encoding.x = {
             "field": config['x'],
             "type": dataProperties[config['x']]['dtype'],
-            "scale": {"zero": config['unpin_x']} 
+            "scale": {"zero": config['unpin_x']}
           };
           secondLayer.encoding.y = {
             "field":config['y2'],
@@ -394,8 +407,8 @@ looker.plugins.visualizations.add({
 
      if (config['x'] != "" && typeof config['x'] != "undefined") {
       chart.spec.layer[0].encoding.x = {
-        "field": config['x'], 
-        "type": dataProperties[config['x']]['dtype'], 
+        "field": config['x'],
+        "type": dataProperties[config['x']]['dtype'],
         "title": dataProperties[config['x']]['title'],
         "scale": {"zero": config['unpin_x']}
       };
@@ -412,7 +425,7 @@ looker.plugins.visualizations.add({
         //parse the string input by user into array of integers
         for (num in config['domain'].split(",")) {
           colorDomain.push(Number(config['domain'].split(",")[num]));
-        }       
+        }
       }
 
      //color domain for second layer
@@ -422,8 +435,8 @@ looker.plugins.visualizations.add({
           //parse the string input by user into array of integers
           for (num in config['domain2'].split(",")) {
             colorDomain2.push(Number(config['domain2'].split(",")[num]));
-          }       
-        } 
+          }
+        }
       }
 
       //set default color sceme
@@ -446,7 +459,7 @@ looker.plugins.visualizations.add({
           //field to drive the highlight
           "field":config['highlight'], "type": dataProperties[config['highlight']]['dtype'], "title": dataProperties[config['highlight']]['title']
           },
-        //value if false 
+        //value if false
         "value":"#B8B8B8"
         };
       } else if (config['color'] != "" && typeof config['color'] != "undefined") {
@@ -488,7 +501,7 @@ looker.plugins.visualizations.add({
       ///////////////////////////////
       //Begin coloring section layer 2//
 
-      
+
     if (typeof secondLayer != "undefined" && secondLayer != "") {
 
       if (config['color2'] != "" && typeof config['color2'] != "undefined") {
@@ -518,7 +531,7 @@ looker.plugins.visualizations.add({
             //assign selected color scheme otherwise - ordinal will work with quantitative data so no checking required
             secondLayer.encoding.color.scale = {"type": "ordinal", "scheme":config['color_scheme2']};
           }
-        }        
+        }
       } else if (config['color'] != "" && typeof config['color'] != "undefined") {
         //if user has changed the field to color by
         //add color setting based on data type
@@ -567,7 +580,7 @@ looker.plugins.visualizations.add({
       if (typeof secondLayer != "undefined" && secondLayer != "") {
         if (config['shape2'] != "" && typeof config['shape2'] != "undefined") {
           secondLayer.encoding.shape = {"field": config['shape2'], "type": dataProperties[config['shape2']]['dtype'],"title": dataProperties[config['shape2']]['title']};
-        }        
+        }
       }
 
       //set style of line
@@ -579,7 +592,7 @@ looker.plugins.visualizations.add({
       if (typeof secondLayer != "undefined" && typeof secondLayer != "") {
         if (config['line_style2'] != "" && typeof config['line_style2'] != "undefined" && config['mark_type2'] == "line") {
           secondLayer.mark.interpolate = config['line_style2'];
-        }        
+        }
       }
 
       //sizing properties
@@ -597,9 +610,9 @@ looker.plugins.visualizations.add({
           if (config['mark_type'] == "line") {
             chart.spec.layer[0].mark.point.size = config['fixed_size'];
           }
-          
+
         }
-        
+
       }
 
       //sizing properties 2
@@ -616,8 +629,8 @@ looker.plugins.visualizations.add({
           } else {
             secondLayer.mark.size = config['fixed_size2'];
           }
-          
-        }       
+
+        }
       }
 
     //add the second layer
@@ -683,7 +696,7 @@ looker.plugins.visualizations.add({
 
           if (config['color'] != "" && typeof config['color'] != "undefined") {
              labelLayer.encoding.detail = {"field": config['color'], "type": dataProperties[config['color']]['dtype']};
-          } 
+          }
           chart.spec.layer.push(labelLayer);
         }
       }
@@ -702,7 +715,7 @@ looker.plugins.visualizations.add({
             labelPinY = "alignLeft";
           }
         }
-          
+
           var labelLayer = {
             "transform": [
               {
@@ -749,7 +762,7 @@ looker.plugins.visualizations.add({
           if (config['color'] != "" && typeof config['color'] != "undefined") {
              labelLayer.encoding.detail = [];
              labelLayer.encoding.detail.push({"field": config['color'], "type": dataProperties[config['color']]['dtype']});
-          } 
+          }
 
           // if (config['labelField'] != config['x']) {
           //     labelLayer.encoding.detail.push({"field": config['x'], "type": dataProperties[config['x']]['dtype']});
@@ -918,7 +931,7 @@ looker.plugins.visualizations.add({
         chart.spec.layer[0].encoding.color = {"field":config['color'],"type":dataProperties[config['color']]['dtype'],"title":dataProperties[config['color']]['title']};
         chart.spec.layer[0].encoding.color.scale = {"type": "ordinal", "scheme":config['color_scheme']};
       }
-      
+
       // chart.spec.layer[0].encoding.opacity = {"value":config['opacity']};
 
       if (config['boxplotExtent'] == "1.5") {
@@ -945,7 +958,7 @@ looker.plugins.visualizations.add({
       var opt = {
         "actions": false,
         "tooltip": tooltipOptions,
-        "renderer": "canvas"
+        "renderer": "svg"
       };
 
       function pdfDone() {
@@ -963,16 +976,16 @@ looker.plugins.visualizations.add({
                LookerCharts.Utils.openDrillMenu({
                 links: item.datum.links,
                 event: event
-            });  
-              }               
+            });
+              }
              } catch(err) {
              }
           }
         });
         pdfDone();
-      }); 
+      });
 }
-      
+
     }
 });
 
@@ -1009,8 +1022,8 @@ function createMetaData(allFields,queryResponse){
         } else {
           dataProperties[allFields[field]]['dtype'] = "quantitative";
         }
-        
-      } 
+
+      }
     });
     //get friendly names for dimensions
     queryResponse.fields.dimension_like.forEach(function(dimension){
@@ -1019,14 +1032,14 @@ function createMetaData(allFields,queryResponse){
           dataProperties[allFields[field]]['title'] = dimension['label_short'];
         } else {
           dataProperties[allFields[field]]['title'] = dimension['label'];
-        }       
+        }
         dataProperties[allFields[field]]['valueFormat'] = dataFormatDict[String(dimension['value_format'])];
         if (dateFields.includes(dimension.type)) {
           dataProperties[allFields[field]]['dtype'] = "temporal";
         } else {
           dataProperties[allFields[field]]['dtype'] = "nominal";
         }
-      } 
+      }
     });
   }
   return dataProperties;
@@ -1084,7 +1097,7 @@ function createOptions(queryResponse){
       defaultMes = fieldName //grab first measure as default Y value
     }
     optionsResponse['masterList'].push(mesLib);
-    
+
     mesCounter += 1;
   });
 
@@ -1431,7 +1444,7 @@ function createOptions(queryResponse){
     display: "select",
     order: 8,
     default: true,
-    values: [{"Yes":false},{"No":true}]   
+    values: [{"Yes":false},{"No":true}]
   }
   optionsResponse['options']['fixed_height'] = {
     label: "Chart Height",
@@ -1510,7 +1523,7 @@ function createOptions(queryResponse){
     display: "select",
     order: 1,
     values: optionsResponse['masterList'],
-    default: ""    
+    default: ""
   }
   optionsResponse['options']['y2'] = {
     label: "Y2",
@@ -1519,7 +1532,7 @@ function createOptions(queryResponse){
     display: "select",
     order: 2,
     values: optionsResponse['masterList'],
-    default: ""    
+    default: ""
   }
   optionsResponse['options']['averageX'] = {
     label: "Reference Line X",
