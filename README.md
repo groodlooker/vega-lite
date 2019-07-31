@@ -27,8 +27,12 @@ Vega-lite for Looker 3.0
 https://s3.us-east-2.amazonaws.com/grood-lookin/vega-3.js
 
 Dependencies that need to be added to your Looker Custom Viz are hosted here.
-**Please refer to this link https://vega.github.io/vega-lite/usage/embed.html 
-for most up-to-date dependencies**
+**Please refer to this link** 
+
+https://vega.github.io/vega-lite/usage/embed.html
+
+**for most up-to-date dependencies**
+
 (Newer versions of Vega-lite for Looker may not work without updating to the newest Vega dependencies)
 
 https://cdn.jsdelivr.net/npm/vega@5.0.0-rc2
