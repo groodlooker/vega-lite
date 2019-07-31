@@ -26,8 +26,14 @@ https://cdn.jsdelivr.net/npm/vega-embed@3.29.1
 
 Versions:
 
-Beta with sort & label fixes:
+Vega-lite for Looker 3.2 with Legend & Size Control:
+https://grood-lookin.s3.us-east-2.amazonaws.com/vega-3-2.js
+
+Vega-lite for Looker 3.1 with sort & label fixes:
 https://s3.us-east-2.amazonaws.com/grood-lookin/vega-3-1.js
+
+Vega-lite for Looker 3.0
+https://s3.us-east-2.amazonaws.com/grood-lookin/vega-3.js
 
 Vega-lite for Looker 1.0
 https://s3.us-east-2.amazonaws.com/grood-lookin/vega.js
@@ -35,8 +41,6 @@ https://s3.us-east-2.amazonaws.com/grood-lookin/vega.js
 Vega-lite for Looker 2.0:
 https://s3.us-east-2.amazonaws.com/grood-lookin/vega-2.js
 
-Vega-lite for Looker 3.0
-https://s3.us-east-2.amazonaws.com/grood-lookin/vega-3.js
 
 All charts you create will maintain their drill paths with additional info about which field is generating the drill link.
 
