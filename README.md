@@ -46,6 +46,9 @@ All charts you create will maintain their drill paths with additional info about
 
 A few examples of what you can create with Vega-Lite for Looker:
 
+**Move Legend in 3.2 (& two Looker color Palettes)**
+![Screenshot](screen-shots/legend.png)
+
 **Labels available in 3.0**
 ![Screenshot](screen-shots/labels_stacked.png)
 Label can be pinned to the field value or to zero:
