@@ -4,13 +4,25 @@ Vega is an incredible way to create visualizations, stated in their own words:
 
 More complex Vega visuals in Looker: https://github.com/groodlooker/vega
 
-**New as of 12/22/18 Added Support for mark type 'boxplot'**
-
-**New as of 1/14/18 Support for Labels vega-3.js**
-
 This Looker version adds a number of ui elements to craft visualizations in Vega-Lite, a higher-level language built on top of Vega:
 
 https://vega.github.io/vega-lite/
+
+Dependencies that need to be added to your Looker Custom Viz are hosted here.
+
+**Please refer to this link** 
+
+https://vega.github.io/vega-lite/usage/embed.html
+
+**for most up-to-date dependencies**
+
+(Newer versions of Vega-lite for Looker may not work without updating to the newest Vega dependencies)
+
+https://cdn.jsdelivr.net/npm/vega@5.0.0-rc2
+
+https://cdn.jsdelivr.net/npm/vega-lite@3.0.0-rc13
+
+https://cdn.jsdelivr.net/npm/vega-embed@3.29.1
 
 Versions:
 
@@ -25,21 +37,6 @@ https://s3.us-east-2.amazonaws.com/grood-lookin/vega-2.js
 
 Vega-lite for Looker 3.0
 https://s3.us-east-2.amazonaws.com/grood-lookin/vega-3.js
-
-Dependencies that need to be added to your Looker Custom Viz are hosted here.
-**Please refer to this link** 
-
-https://vega.github.io/vega-lite/usage/embed.html
-
-**for most up-to-date dependencies**
-
-(Newer versions of Vega-lite for Looker may not work without updating to the newest Vega dependencies)
-
-https://cdn.jsdelivr.net/npm/vega@5.0.0-rc2
-
-https://cdn.jsdelivr.net/npm/vega-lite@3.0.0-rc13
-
-https://cdn.jsdelivr.net/npm/vega-embed@3.29.1
 
 All charts you create will maintain their drill paths with additional info about which field is generating the drill link.
 
