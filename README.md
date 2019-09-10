@@ -10,11 +10,15 @@ https://vega.github.io/vega-lite/
 
 Dependencies that need to be added to your Looker Custom Viz are hosted here.
 
-**Please refer to this link** 
+**Use these dependencies for Vega 3.2** 
 
-https://vega.github.io/vega-lite/usage/embed.html
+https://cdn.jsdelivr.net/npm/vega@5.4.0
 
-**for most up-to-date dependencies**
+https://cdn.jsdelivr.net/npm/vega-lite@3.4.0
+
+https://cdn.jsdelivr.net/npm/vega-embed@4.2.1
+
+**If using older versions of vega and having issues, try these dependencies**
 
 (Newer versions of Vega-lite for Looker may not work without updating to the newest Vega dependencies)
 
