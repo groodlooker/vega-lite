@@ -1,5 +1,17 @@
 // const vegaEmbed = require("/Users/ryangrojean/Documents/packed_visuals/vega-looker/node_modules/vega-embed/build/vega-embed.js");
 
+// Pollyfill Array.Flat for Edge Users.
+if (typeof Array.prototype.flat !== "function") {
+  Array.prototype.flat = function(depth) {
+    if (depth <= 0 || depth == undefined) depth = 1;
+    let arr = this;
+    do {
+      arr = arr.reduce((acc, val) => acc.concat(val), []);
+    } while (--depth > 0);
+    return arr;
+  };
+}
+
 /**
  * Fixes the chart sizing so that it doesn't overflow outside
  * of lookers 'vis' container.
