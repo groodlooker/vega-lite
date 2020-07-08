@@ -8,6 +8,9 @@ This Looker version adds a number of ui elements to craft visualizations in Vega
 
 https://vega.github.io/vega-lite/
 
+**NEW as of 07/08/2020 a bundled version - simply drop in the "Main" section. No more dependencies needed.**
+https://storage.googleapis.com/custom-visualizations/bundle.js
+
 Dependencies that need to be added to your Looker Custom Viz are hosted here.
 
 **Use these dependencies for Vega 3.2** 
