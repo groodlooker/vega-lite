@@ -1,6 +1,7 @@
 # Vega-Lite for Looker
 Vega is an incredible way to create visualizations, stated in their own words:
-# Vega is a visualization grammar, a declarative language for creating, saving, and sharing interactive visualization designs. With Vega, you can describe the visual appearance and interactive behavior of a visualization in a JSON format, and generate web-based views using Canvas or SVG.
+
+**Vega is a visualization grammar, a declarative language for creating, saving, and sharing interactive visualization designs. With Vega, you can describe the visual appearance and interactive behavior of a visualization in a JSON format, and generate web-based views using Canvas or SVG.**
 
 More complex Vega visuals in Looker: https://github.com/groodlooker/vega
 
@@ -8,67 +9,45 @@ This Looker version adds a number of ui elements to craft visualizations in Vega
 
 https://vega.github.io/vega-lite/
 
-**NEW as of 07/08/2020 a bundled version - simply drop in the "Main" section. No more dependencies needed.**
-https://storage.googleapis.com/custom-visualizations/bundle.js
 
-Dependencies that need to be added to your Looker Custom Viz are hosted here.
+## Install Steps
 
-**Use these dependencies for Vega 3.2** 
+To install vega-lite in Looker: 
 
-https://cdn.jsdelivr.net/npm/vega@5.4.0
-
-https://cdn.jsdelivr.net/npm/vega-lite@3.4.0
-
-https://cdn.jsdelivr.net/npm/vega-embed@4.2.1
-
-**If using older versions of vega and having issues, try these dependencies**
-
-(Newer versions of Vega-lite for Looker may not work without updating to the newest Vega dependencies)
+1. In the Looker Admin panel go to 'Visualizations'
+2. Click on 'Add Visualization'
+3. Give the visualization an ID and a label
+4. In the 'Main' section, add: https://s3.us-east-2.amazonaws.com/grood-lookin/vega-3-1.js
+5. Click on 'Advanced options', and paste in the 3 dependencies:
 
 https://cdn.jsdelivr.net/npm/vega@5.0.0-rc2
-
 https://cdn.jsdelivr.net/npm/vega-lite@3.0.0-rc13
-
 https://cdn.jsdelivr.net/npm/vega-embed@3.29.1
 
-Versions:
+6. Click Save
 
-Vega-lite for Looker 3.2 with Legend & Size Control:
-https://grood-lookin.s3.us-east-2.amazonaws.com/vega-3-2.js
+## Usage
 
-Vega-lite for Looker 3.1 with sort & label fixes:
-https://s3.us-east-2.amazonaws.com/grood-lookin/vega-3-1.js
+In an explore, select your visualiation ID that corresponds to vegalite and then tweak the desired settings. Vega-lite is different from regular Lookerr visualizations, it works best if each column in your result set is mapped to a part of your visualization. Unlike native Looker visualizations, Vega-lite works best with un-pivoted data. Most charts you create will maintain their drill paths with additional info about which field is generating the drill link.
 
-Vega-lite for Looker 3.0
-https://s3.us-east-2.amazonaws.com/grood-lookin/vega-3.js
-
-Vega-lite for Looker 1.0
-https://s3.us-east-2.amazonaws.com/grood-lookin/vega.js
-
-Vega-lite for Looker 2.0:
-https://s3.us-east-2.amazonaws.com/grood-lookin/vega-2.js
-
-
-All charts you create will maintain their drill paths with additional info about which field is generating the drill link.
 
 A few examples of what you can create with Vega-Lite for Looker:
 
-**Move Legend in 3.2 (& two Looker color Palettes)**
+Custom color palletes and legends including a Looker theme:
 ![Screenshot](screen-shots/legend.png)
 
-**Labels available in 3.0**
+Labels:
 ![Screenshot](screen-shots/labels_stacked.png)
+
 Label can be pinned to the field value or to zero:
 ![Screenshot](screen-shots/label_pinned_zero.png)
+
 Apply filters/conditions to labels:
 ![Screenshot](screen-shots/label_filters.png)
 
-**New as of 12/22/18 box plot support**
-
+Boxplots:
 ![Screenshot](screen-shots/standard_box.png)
 ![Screenshot](screen-shots/colored_boxes.png)
-
-**Multi-layer support availabe in 2.0**
 
 Value vs Target charting:
 ![Screenshot](screen-shots/value_v_target.png)
@@ -78,8 +57,6 @@ Lollipop style charts:
 
 Reference Lines that update on selection:
 ![Screenshot](screen-shots/movable_ref_line.png)
-
-**Functionality in original vega-lite**
 
 Bar trellising:
 ![Screenshot](screen-shots/bar_trellis.png)
@@ -100,4 +77,45 @@ Scatter Plots:
 Highlighting:
 ![Screenshot](screen-shots/highlight.png)
 
-Vega-Lite enables even richer visualization than this current version of "Vega-Lite for Looker" will allow for. Future iterations of this will include layers or "dual axis" support, cross-highlighting capabilities, more formatting options (line thickness, fonts, etc) and possibly crossfiltering.
+
+## Wishlist
+
+Vega-Lite enables even richer visualization than this current version of "Vega-Lite for Looker". Future iterations of this will include layers or "dual axis" support, cross-highlighting capabilities, more formatting options (line thickness, fonts, etc) and possibly crossfiltering.
+
+## Release Information 
+
+**Dependencies for Vega 3.2** 
+
+https://cdn.jsdelivr.net/npm/vega@5.4.0
+
+https://cdn.jsdelivr.net/npm/vega-lite@3.4.0
+
+https://cdn.jsdelivr.net/npm/vega-embed@4.2.1
+
+**Dependencies for older versions of Vega**
+
+(Newer versions of Vega-lite for Looker may not work without updating to the newest Vega dependencies)
+
+https://cdn.jsdelivr.net/npm/vega@5.0.0-rc2
+
+https://cdn.jsdelivr.net/npm/vega-lite@3.0.0-rc13
+
+https://cdn.jsdelivr.net/npm/vega-embed@3.29.1
+
+**Older releases of vega-lite for Looker**
+
+Vega-lite for Looker 3.2 with Legend & Size Control:
+https://grood-lookin.s3.us-east-2.amazonaws.com/vega-3-2.js
+
+Vega-lite for Looker 3.1 with sort & label fixes:
+https://s3.us-east-2.amazonaws.com/grood-lookin/vega-3-1.js
+
+Vega-lite for Looker 3.0
+https://s3.us-east-2.amazonaws.com/grood-lookin/vega-3.js
+
+Vega-lite for Looker 2.0:
+https://s3.us-east-2.amazonaws.com/grood-lookin/vega-2.js
+
+Vega-lite for Looker 1.0:
+https://s3.us-east-2.amazonaws.com/grood-lookin/vega.js
+
